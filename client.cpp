@@ -6,13 +6,23 @@
 
 Client::Client(QObject *parent) : QObject(parent) {
     socket = new QTcpSocket(nullptr);
-    socket->connectToHost("localhost", 65432);
-    socket->waitForConnected();
-    std::cout << "Connected" << std::endl;
+
 }
 
 Client::~Client() {
      socket->close();
+}
+
+void Client::connect(QString hostname, int port) {
+    assert (port > 0);
+    socket->connectToHost(hostname, port);
+    socket->waitForConnected();
+    std::cout << "Connected" << std::endl;
+    this->connected = true;
+}
+
+bool Client::isConnected() {
+    return this->connected;
 }
 
 void Client::send(QString data) {

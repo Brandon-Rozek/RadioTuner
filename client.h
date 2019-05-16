@@ -13,8 +13,11 @@ public:
     QString recv(void);
     Q_INVOKABLE void setFrequency(double freq);
     Q_INVOKABLE double getFrequency(void);
+    Q_INVOKABLE void connect(QString host, int port);
+    Q_INVOKABLE bool isConnected();
 private:
     QTcpSocket *socket = nullptr;
+    bool connected = false;
 };
 
 #endif // CLIENT_H
