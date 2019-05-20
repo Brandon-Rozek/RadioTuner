@@ -50,8 +50,8 @@ class top_block(gr.top_block):
 
         self.low_pass_filter_0 = filter.fir_filter_ccf(4, firdes.low_pass(
         	1, samp_rate, 500000, 60000, firdes.WIN_KAISER, 6.76))
+        self.blocks_udp_sink_0 = blocks.udp_sink(gr.sizeof_float*1, '127.0.0.1', 7654, 1472, True)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.audio_sink_0 = audio.sink(48000, 'pulse', True)
         self.analog_wfm_rcv_0 = analog.wfm_rcv(
         	quad_rate=384000,
         	audio_decimation=8,
@@ -60,7 +60,7 @@ class top_block(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_wfm_rcv_0, 0), (self.audio_sink_0, 0))
+        self.connect((self.analog_wfm_rcv_0, 0), (self.blocks_udp_sink_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_wfm_rcv_0, 0))
         self.connect((self.rtlsdr_source_0, 0), (self.blocks_throttle_0, 0))
