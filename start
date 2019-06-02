@@ -1,0 +1,24 @@
+#!/bin/bash
+compress=1
+
+function cleanup() {
+	echo "Shutting Down"
+	rm ./raw_audio_pipe
+	kill $child_pid
+}
+
+mkfifo ./raw_audio_pipe
+
+# Run Radio Server Program in Background
+./tuner.py &
+child_pid=$!
+
+if [ $compress -eq 1 ]
+then
+	ffmpeg -f f32le -ar 48k -ac  1 -i pipe:0 -f ogg -ab 32k pipe:1 < ./raw_audio_pipe | nc -kl 127.0.0.1 6003 
+
+else
+	tail -f raw_audio_pipe | nc -kl 127.0.0.1 6003 
+fi
+
+cleanup
