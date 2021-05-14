@@ -14,7 +14,6 @@ Client::~Client() {
 }
 
 void Client::connect(QString hostname, int port) {
-    assert (port > 0);
     socket->connectToHost(hostname, port);
     socket->waitForConnected();
     std::cout << "Connected" << std::endl;
